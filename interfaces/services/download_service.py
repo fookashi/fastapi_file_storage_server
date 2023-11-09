@@ -3,8 +3,8 @@ from abc import ABC, abstractmethod
 from fastapi.responses import FileResponse
 
 
-class IUploadService(ABC):
+class IDownloadService(ABC):
     
     @abstractmethod
-    async def download_file(self, file_id: UUID) -> FileResponse | str:
+    async def download(self, file_id: UUID) -> FileResponse | None:
         raise NotImplementedError

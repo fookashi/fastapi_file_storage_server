@@ -1,9 +1,9 @@
 from uuid import UUID
+from typing import Optional
 
 from pydantic import BaseModel
-from typing import Literal
 
 
 class FileStorageResponse(BaseModel):
     file_id: UUID
-    name: str
+    name: Optional[str] = None

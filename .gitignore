@@ -1,1 +1,4 @@
 **/__pycache__
+/storaged_files
+.gitignore
+files.db
