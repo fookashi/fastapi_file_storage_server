@@ -19,19 +19,19 @@ class SQLiteFileRepository(IRepository):
     
     async def create(self, name: str, id: UUID) -> str:
         async with self.session as cursor:
-            query = text(f"INSERT INTO files VALUES ('{id}','{name}')")
+            query = text(f"INSERT INTO files VALUES ('{id}','{name}', 'uploading')")
             await cursor.execute(query)
             await cursor.commit()
             
-    async def read(self, id: UUID) -> str:
+    async def read(self, id: UUID) -> list:
         async with self.session as cursor:
-            query = text(f"SELECT name FROM files WHERE id='{id}'")
+            query = text(f"SELECT name, status FROM files WHERE id='{id}'")
             exc = await cursor.execute(query)
         return exc.fetchone()[0]
             
-    async def update(self, id: UUID, new_name: str) -> str:
+    async def update(self, id: UUID, new_name: str = None, new_status: str = None) -> str:
         async with self.session as cursor:
-            query = text(f"UPDATE files SET name='{new_name}' WHERE id='{id}'")
+            query = text(f"""UPDATE files SET {f"name='{new_name}'," if new_name else ""}{f"status='{new_status}'" if new_status else ""} WHERE id='{id}' """)
             await cursor.execute(query)
             await cursor.commit()
     

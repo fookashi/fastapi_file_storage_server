@@ -1,7 +1,7 @@
 from uuid import uuid4, UUID
 from typing import Optional
 
-from fastapi import APIRouter, status, UploadFile, File, Depends
+from fastapi import APIRouter, status, Depends, Request
 from fastapi.background import BackgroundTasks
 from fastapi.responses import FileResponse
 
@@ -19,16 +19,13 @@ storage_router = APIRouter(prefix='/storage')
     status_code=status.HTTP_200_OK,
     response_model=FileStorageResponse,
 )
-async def upload(name: Optional[str] = None,
-                 file: UploadFile = File(),
-                 upload_service: UploadService = Depends(UploadService),
-                 background_tasks: BackgroundTasks = BackgroundTasks()
+async def upload(file: Request,
+                 upload_service: UploadService = Depends(UploadService)
                 ) -> FileStorageResponse:
     file_id = uuid4()
-    if name is None:
-        name = file_id.hex
-    background_tasks.add_task(upload_service.upload, name, file_id, file)
-    return FileStorageResponse(file_id=file_id, name=name)
+    name = file.headers.get('name')
+    await upload_service.upload(name, file_id, file)
+    return FileStorageResponse(file_id=file_id)
 
 
 @storage_router.get(

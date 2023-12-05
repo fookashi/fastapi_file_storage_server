@@ -10,4 +10,5 @@ async_session = async_sessionmaker(engine, expire_on_commit=True)
 
 async def init_db():
     async with engine.begin() as conn:
-        await conn.execute(text(f"CREATE TABLE IF NOT EXISTS files (id UUID PRIMARY KEY, name VARCHAR(255))"))
+        await conn.execute(text(f"CREATE TABLE IF NOT EXISTS files (id UUID PRIMARY KEY, name VARCHAR(255), status VARCHAR(64))"))
+        

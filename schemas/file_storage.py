@@ -6,4 +6,3 @@ from pydantic import BaseModel
 
 class FileStorageResponse(BaseModel):
     file_id: UUID
-    name: Optional[str] = None
